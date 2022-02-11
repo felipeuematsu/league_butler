@@ -2,9 +2,9 @@ import 'package:get/get.dart';
 
 class AppController extends GetxController {
 
-  AppController({required this.password, required this.port});
+  AppController({required this.token, required this.port});
 
-  final String password;
+  final String token;
   final int port;
 
 }

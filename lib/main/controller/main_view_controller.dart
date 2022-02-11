@@ -29,7 +29,7 @@ class MainViewController extends GetxController {
 
     print('Found LeagueClientUx.exe with token $token and port $port');
 
-    Get.lazyPut<AppController>(() => AppController(port: port, password: token));
+    Get.lazyPut<AppController>(() => AppController(port: port, token: token));
   }
 
   @override

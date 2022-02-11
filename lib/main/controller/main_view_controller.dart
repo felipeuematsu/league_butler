@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -8,7 +7,6 @@ import 'package:league_butler/main/controller/app_controller.dart';
 
 class MainViewController extends GetxController {
   late final splashImage = getRandomSplashImage();
-  static const username = 'riot';
 
   String getRandomSplashImage() => LbImagesUtil.splashImages.elementAt(Random().nextInt(LbImagesUtil.splashImages.length - 1));
 
@@ -21,20 +19,22 @@ class MainViewController extends GetxController {
       leagueClientProcess = Process.runSync('ps', ['-A', '|', 'grep' 'LeagueClientUx']);
     }
 
-    print(leagueClientProcess.stdout);
+    final tokenRegex = RegExp('remoting-auth-token=([\\w-]*)');
+    final portRegex = RegExp('app-port=(\\d*)');
 
-    final processRegex = RegExp('(.*):(\\d*):(\\d*):(.*):(.*)');
-    final matches = processRegex.firstMatch(leagueClientProcess.stdout);
+    final token = tokenRegex.firstMatch(leagueClientProcess.stdout)?.group(1);
+    final port = int.tryParse(portRegex.firstMatch(leagueClientProcess.stdout)?.group(1) ?? '');
 
-    final port = int.tryParse(matches?.group(4) ?? '');
-    final password = matches?.group(5);
+    if (port == null || token == null) return await Future.delayed(const Duration(seconds: 2)).then((_) async => await findProcess());
 
-    if (port == null || password == null) {
-      return await Future.delayed(const Duration(seconds: 2)).then((value) async => await findProcess());
-    }
+    print('Found LeagueClientUx.exe with token $token and port $port');
 
-    final encoded = base64.encode('$username:$password'.codeUnits);
+    Get.lazyPut<AppController>(() => AppController(port: port, password: token));
+  }
 
-    Get.lazyPut<AppController>(() => AppController(port: port, password: encoded));
+  @override
+  void onInit() {
+    super.onInit();
+    findProcess();
   }
 }

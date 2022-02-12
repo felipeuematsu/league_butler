@@ -1,19 +1,23 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:league_butler/commons/routes.dart';
+import 'package:league_butler/database/database.dart';
+import 'package:league_butler/database/database_keys.dart';
 
 import 'commons/strings.dart';
 
-Future<void> main() async {
+Future<void> initDependencies() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init();
+  await Database().init();
+}
 
+Future<void> main() async {
+  await initDependencies();
   runApp(const LeagueButler());
 
-  doWhenWindowReady(() {
-    final size = GetStorage().read<Size>('window_size');
+  doWhenWindowReady(() async {
+    final size = await Database().read<Size>(DatabaseKeys.windowSize);
     final initialSize = size ?? const Size(1024, 768);
     appWindow.minSize = initialSize;
     appWindow.size = initialSize;

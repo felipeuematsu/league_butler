@@ -2,6 +2,8 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class WindowButtons extends StatelessWidget {
+  WindowButtons({Key? key}) : super(key: key);
+
   final _buttonColors = WindowButtonColors(
     normal: Colors.white.withOpacity(.2),
     iconNormal: const Color(0xFF805306),

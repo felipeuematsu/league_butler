@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
 import 'package:get/get.dart';
 import 'package:league_butler/commons/lb_images.dart';
 import 'package:league_butler/main/controller/app_controller.dart';
+import 'package:league_butler/service/request_service.dart';
 
 class MainViewController extends GetxController {
   late final splashImage = getRandomSplashImage();
@@ -28,8 +30,12 @@ class MainViewController extends GetxController {
     if (port == null || token == null) return await Future.delayed(const Duration(seconds: 2)).then((_) async => await findProcess());
 
     print('Found LeagueClientUx.exe with token $token and port $port');
+    var requestService = RequestService(port: port, token: base64Encode('riot:$token'.codeUnits));
 
     Get.lazyPut<AppController>(() => AppController(port: port, token: token));
+    Get.lazyPut<RequestService>(() => requestService);
+
+    requestService.test();
   }
 
   @override

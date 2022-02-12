@@ -2,11 +2,11 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:league_butler/commons/components/window_buttons.dart';
 
-class LbWindow extends StatelessWidget {
+class WindowScaffold extends StatelessWidget {
 
-  const LbWindow({Key? key, required this.body, required this.background}) : super(key: key);
+  const WindowScaffold({Key? key, this.body, required this.background}) : super(key: key);
 
-  final Widget body;
+  final Widget? body;
   final Widget background;
 
   @override
@@ -22,17 +22,30 @@ class LbWindow extends StatelessWidget {
                 WindowTitleBarBox(
                   child: Row(
                     children: [
-                      Expanded(child: MoveWindow()),
+                      Expanded(child: CustomMoveWindow()),
                       WindowButtons(),
                     ],
                   ),
                 ),
-                body,
+                Expanded(child: body ?? Container()),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class CustomMoveWindow extends MoveWindow {
+  CustomMoveWindow({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onPanStart: (details) => appWindow.startDragging(),
+    );
+
   }
 }

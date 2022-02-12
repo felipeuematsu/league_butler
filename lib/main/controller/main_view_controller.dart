@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
+import 'package:dio_http2_adapter/dio_http2_adapter.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:league_butler/commons/lb_images.dart';
 import 'package:league_butler/database/database.dart';
@@ -33,7 +36,7 @@ class MainViewController extends GetxController {
       return await Future.delayed(const Duration(seconds: 2)).then((_) async {
         logger.d('LeagueClientUx not found, retrying...');
         await findProcess();
-    });
+      });
     }
 
     logger.d('Found LeagueClientUx.exe with token $token and port $port');
@@ -44,6 +47,25 @@ class MainViewController extends GetxController {
     var encoded = base64.encode('riot:$token'.codeUnits);
     logger.i('Encoded $encoded');
     await Database().write(DatabaseKeys.localTokenBase64, encoded);
+
+    var dio = Dio();
+    dio.options.headers['authorization'] = 'Basic $encoded';
+    dio.options.headers['accept'] = 'application/json';
+    dio.options.headers['content-type'] = 'application/json';
+    dio.options.baseUrl = 'https://127.0.0.1:$port';
+    dio.httpClientAdapter = Http2Adapter(ConnectionManager(
+      onClientCreate: (uri, p1) async {
+        p1.onBadCertificate = (certificate) => true;
+        final sc = SecurityContext(withTrustedRoots: true);
+        var certificatePemByteData = await rootBundle.load('assets/certificate/riotgames.pem');
+        var certificatePemData = certificatePemByteData.buffer.asUint8List(certificatePemByteData.offsetInBytes, certificatePemByteData.lengthInBytes);
+
+        sc.useCertificateChainBytes(certificatePemData);
+        p1.context = sc;
+      },
+    ));
+    var response = await dio.get('/lol-summoner/v1/current-summoner/');
+    logger.d('Response: ${response.data}');
 
     await requestService.test();
   }

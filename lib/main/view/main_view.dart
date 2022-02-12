@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:league_butler/commons/components/lb_window.dart';
+import 'package:league_butler/commons/components/window_scaffold.dart';
 import 'package:league_butler/main/controller/main_view_controller.dart';
 import 'package:league_butler/main/main_strings.dart';
 
@@ -9,14 +9,20 @@ class MainView extends GetView<MainViewController> {
 
   @override
   Widget build(BuildContext context) {
-    return LbWindow(
+    return WindowScaffold(
       background: Image.asset(controller.splashImage, fit: BoxFit.cover),
-      body: Center(
-        child: Text(
-          MainStrings.waitingForClient.tr,
-          style: const TextStyle(color: Colors.white, fontSize: 64),
+      body: Stack(children: [
+        Positioned(
+          left: Get.width * 0.1,
+          bottom: Get.height * 0.1,
+          child: Center(
+            child: Text(
+              MainStrings.waitingForClient.tr,
+              style: const TextStyle(color: Colors.white, fontSize: 64),
+            ),
+          ),
         ),
-      ),
+      ]),
     );
   }
 }

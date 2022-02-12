@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:league_butler/commons/routes.dart';
 import 'package:league_butler/database/database.dart';
 import 'package:league_butler/database/database_keys.dart';
+import 'package:league_butler/utils/screen_helper.dart';
 
 import 'commons/strings.dart';
 
@@ -17,10 +18,10 @@ Future<void> main() async {
   runApp(const LeagueButler());
 
   doWhenWindowReady(() async {
-    final size = await Database().read<Size>(DatabaseKeys.windowSize);
-    final initialSize = size ?? const Size(1024, 768);
-    appWindow.minSize = initialSize;
-    appWindow.size = initialSize;
+    final size = await Database().read<ScreenSize>(DatabaseKeys.windowSize) ?? ScreenSize.s1024x576;
+    appWindow.minSize = size.size;
+    appWindow.maxSize = size.size;
+    appWindow.size = size.size;
     appWindow.alignment = Alignment.center;
     appWindow.show();
   });

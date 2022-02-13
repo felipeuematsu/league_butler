@@ -11,6 +11,7 @@ class WindowScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return WindowBorder(
       color: Colors.white,
       child: Stack(
@@ -22,7 +23,7 @@ class WindowScaffold extends StatelessWidget {
                 WindowTitleBarBox(
                   child: Row(
                     children: [
-                      Expanded(child: CustomMoveWindow()),
+                      const Expanded(child: _CustomMoveWindow()),
                       WindowButtons(),
                     ],
                   ),
@@ -37,8 +38,8 @@ class WindowScaffold extends StatelessWidget {
   }
 }
 
-class CustomMoveWindow extends MoveWindow {
-  CustomMoveWindow({Key? key}) : super(key: key);
+class _CustomMoveWindow extends StatelessWidget {
+  const _CustomMoveWindow({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

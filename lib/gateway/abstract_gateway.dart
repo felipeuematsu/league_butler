@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/native_imp.dart';
 import 'package:dio_http2_adapter/dio_http2_adapter.dart';
@@ -17,10 +18,12 @@ abstract class AbstractGateway extends DioForNative {
     if (isEnableEncrypt && apiKey == null) throw 'Encryption requires api key.';
 
     options = getBaseOptions();
-    _certificatesConfigure();
+    certificatesConfigure();
     interceptors.addAll(
       _getInterceptors().whereType(),
     );
+
+    // (httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) => client..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
   }
 
   abstract final GatewaySettings settings;
@@ -34,17 +37,17 @@ abstract class AbstractGateway extends DioForNative {
         receiveTimeout: receiveTimeout,
       );
 
-  void _certificatesConfigure() {
+  void certificatesConfigure() {
     httpClientAdapter = Http2Adapter(
       ConnectionManager(
         onClientCreate: (uri, config) async {
           if (EnvironmentConfig.isEnableSslPinning) {
-            final sc = SecurityContext(withTrustedRoots: true);
-            var credentialsPath = settings.credentialsPath;
-            if (credentialsPath != null) {
-              sc.useCertificateChainBytes(await getFileFromByteData(credentialsPath));
-            }
-            config.context = sc;
+            final credentialsPath = settings.credentialsPath;
+            if (credentialsPath == null) return;
+
+            config.context = SecurityContext(withTrustedRoots: true)
+              ..useCertificateChainBytes(await getFileFromByteData(credentialsPath));
+
           } else {
             config.onBadCertificate = (_) => true;
           }

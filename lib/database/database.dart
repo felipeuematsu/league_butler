@@ -57,7 +57,6 @@ class Database {
   
   
   Future<T?> read<T>(key, {bool persistent = false}) async {
-   
     return await (persistent ? readPersistent(_keyAsString(key)) : readNonPersistent(_keyAsString(key)));
   }
 

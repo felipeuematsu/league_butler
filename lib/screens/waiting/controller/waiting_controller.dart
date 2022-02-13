@@ -28,12 +28,12 @@ class WaitingController extends GetxController with GetSingleTickerProviderState
     textContent.value = WaitingStrings.waitingForClient.tr;
     _animationController.forward();
 
-    return await continuousAnimation();
+    return continuousAnimation();
 
   }
 
   Future<void> continuousAnimation() async {
-    while (true) {
+    while (!didConnect) {
       await Future.delayed(const Duration(seconds: 2));
       if (didConnect) break;
       _animationController.reverse();

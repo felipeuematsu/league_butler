@@ -25,7 +25,7 @@ class WindowScaffold extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(child: Container(color: Get.theme.colorScheme.tertiary,child: const _CustomMoveWindow())),
+                      Expanded(child: Container(color: Get.theme.colorScheme.tertiary, child: const _CustomMoveWindow())),
                       WindowButtons(),
                     ],
                   ),

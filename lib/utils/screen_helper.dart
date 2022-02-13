@@ -7,7 +7,7 @@ import 'package:league_butler/database/database_keys.dart';
 class ScreenHelper {
   ScreenHelper._();
 
-  static double get scale => getScreenSize._scale;
+  static double get scale => getScreenSize.scale;
 
   static ScreenSize get getScreenSize {
     switch (appWindow.size.width.toInt()) {
@@ -45,7 +45,7 @@ extension ScreenSizeExt on ScreenSize {
     }
   }
 
-  double get _scale {
+  double get scale {
     switch (this) {
       case ScreenSize.s1024x576:
         return 1.0;
@@ -57,8 +57,8 @@ extension ScreenSizeExt on ScreenSize {
   }
 }
 
-extension DoubleExt on double {
+extension NumExt on num {
   double get scale {
-    return this * ScreenHelper.scale;
+    return this * ScreenHelper.getScreenSize.scale;
   }
 }

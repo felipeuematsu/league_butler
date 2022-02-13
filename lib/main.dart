@@ -2,9 +2,11 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:league_butler/commons/lib_color_schemes.g.dart';
 import 'package:league_butler/commons/routes.dart';
 import 'package:league_butler/database/database.dart';
 import 'package:league_butler/database/database_keys.dart';
+import 'package:league_butler/main/app_controller.dart';
 import 'package:league_butler/utils/screen_helper.dart';
 
 import 'commons/strings.dart';
@@ -17,7 +19,7 @@ Future<void> initDependencies() async {
 Future<void> main() async {
   await initDependencies();
   final database = Database();
-  runApp(LeagueButler(locale: await database.read<Locale>(DatabaseKeys.locale, persistent: true),));
+  runApp(LeagueButler(locale: await database.read<Locale>(DatabaseKeys.locale, persistent: true)));
 
   doWhenWindowReady(() async {
     final size = await database.read<ScreenSize>(DatabaseKeys.windowSize) ?? ScreenSize.s1600x900;
@@ -25,6 +27,7 @@ Future<void> main() async {
     appWindow.maxSize = size.size;
     appWindow.size = size.size;
     appWindow.alignment = Alignment.center;
+    appWindow.title = CommonStrings.leagueButler.tr;
     appWindow.show();
   });
 }
@@ -36,17 +39,18 @@ class LeagueButler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(AppController());
+
     return GetMaterialApp(
       translations: Strings(),
       title: CommonStrings.leagueButler.tr,
       locale: locale ?? Get.deviceLocale,
       fallbackLocale: const Locale('en', 'US'),
-      getPages: Routes.pages,
-      initialRoute: RoutesEnum.home.route,
-      theme: ThemeData(
-        textTheme: GoogleFonts.robotoTextTheme(),
-        primarySwatch: Colors.blue,
-      ),
+      getPages: RoutesPages.pages,
+      initialRoute: Routes.waitingConnection.route,
+      theme: ThemeData.from(colorScheme: lightColorScheme, textTheme: GoogleFonts.robotoTextTheme().apply(fontFamily: 'RobotoSerif')),
+      darkTheme: ThemeData.from(colorScheme: darkColorScheme, textTheme: GoogleFonts.robotoTextTheme().apply(fontFamily: 'RobotoSerif')),
+      // darkTheme: ThemeData.from(colorScheme: darkColorScheme).copyWith(textTheme: GoogleFonts.getTextTheme('RobotoSerif')),
     );
   }
 }

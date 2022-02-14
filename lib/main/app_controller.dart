@@ -27,6 +27,7 @@ class AppController extends GetxController {
     Get.delete<LCUService>().then((_) => lcuService = null);
   }
 
+  // TODO: Use WebSockets instead of HTTP
   void healthCheck() {
     lcuService?.ping();
     Future.delayed(const Duration(seconds: 5)).then((_) => healthCheck());

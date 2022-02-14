@@ -33,19 +33,19 @@ class Database {
     final encryptedKey = await _getEncryptedKey();
     if (encryptedKey != null) {
       final encryptionKey = base64Url.decode(encryptedKey);
-      _box = await _hive?.openBox(NON_PERSISTENT_DATABASE, HiveAesCipher(encryptionKey), _strategy);
-      _persistentBox = await _hive?.openBox(PERSISTENT_DATABASE, HiveAesCipher(encryptionKey), _strategy);
+      _box = await _hive?.openBox(nonPersistentDatabase, HiveAesCipher(encryptionKey), _strategy);
+      _persistentBox = await _hive?.openBox(persistentDatabase, HiveAesCipher(encryptionKey), _strategy);
     } else {
       throw WLDatabaseEncryptionKeyException();
     }
   }
 
   Future<String?> _getEncryptedKey() async {
-    final containsEncryptionKey = await _secureStorage?.containsKey(key: CRYPTO_KEY_NAME);
+    final containsEncryptionKey = await _secureStorage?.containsKey(key: cryptoKeyName);
     if (containsEncryptionKey == false) {
-      await _secureStorage?.write(key: CRYPTO_KEY_NAME, value: base64Url.encode(CRYPTO_KEY.codeUnits));
+      await _secureStorage?.write(key: cryptoKeyName, value: base64Url.encode(cryptoKey.codeUnits));
     }
-    return await _secureStorage?.read(key: CRYPTO_KEY_NAME);
+    return await _secureStorage?.read(key: cryptoKeyName);
   }
 
   String _keyAsString(key) {

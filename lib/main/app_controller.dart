@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:league_butler/database/database.dart';
 import 'package:league_butler/database/database_keys.dart';
-import 'package:league_butler/screens/home/controller/home_view_controller.dart';
 import 'package:league_butler/screens/waiting/controller/waiting_controller.dart';
 import 'package:league_butler/service/lcu_service.dart';
 import 'package:league_butler/utils/logger.dart';
@@ -23,17 +21,15 @@ class AppController extends GetxController {
 
   LCUService? lcuService;
 
-  Future<void> disconnect() async {
+  void disconnect() {
     connected.value = false;
-    await Database().clearNonPersistent();
-    await Get.delete<LCUService>();
-    await Get.delete<HomeViewController>();
+    Database().clearNonPersistent();
+    Get.delete<LCUService>().then((_) => lcuService = null);
   }
 
-  Future<void> healthCheck() async {
+  void healthCheck() {
     lcuService?.ping();
-    await Future.delayed(const Duration(seconds: 5));
-    healthCheck();
+    Future.delayed(const Duration(seconds: 5)).then((_) => healthCheck());
   }
 
   Future<ProcessResult> findProcess() async {
@@ -48,9 +44,9 @@ class AppController extends GetxController {
     logger.d('Found LeagueClientUx.exe with token $token and port $port');
     connected.value = true;
 
-    Get.lazyPut<LCUService>(() => lcuService = LCUService(port: port));
+    lcuService = Get.put<LCUService>(LCUService(port: port));
 
-    await Database().write(DatabaseKeys.localTokenBase64, base64.encode('riot:$token'.codeUnits));
+    Database().write(DatabaseKeys.localTokenBase64, base64.encode('riot:$token'.codeUnits));
     healthCheck();
     Get.find<WaitingController>().didConnect = true;
   }

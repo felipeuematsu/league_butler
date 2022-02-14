@@ -31,23 +31,16 @@ class AppController extends GetxController {
   }
 
   Future<void> healthCheck() async {
-    while (isConnected) {
-      if (lcuService == null) break;
-      try {
-        lcuService?.ping();
-      } on DioError catch (e) {
-        if (e.type == DioErrorType.connectTimeout || e.type == DioErrorType.receiveTimeout) break;
-        rethrow;
-      }
-      await Future.delayed(const Duration(seconds: 5));
-    }
+    lcuService?.ping();
+    await Future.delayed(const Duration(seconds: 5));
+    healthCheck();
   }
 
-  ProcessResult findProcess() {
+  Future<ProcessResult> findProcess() async {
     if (Platform.isWindows) {
-      return Process.runSync('wmic', ['PROCESS', 'WHERE', "name='LeagueClientUx.exe'", 'GET', 'commandline']);
+      return await Process.run('wmic', ['PROCESS', 'WHERE', "name='LeagueClientUx.exe'", 'GET', 'commandline']);
     } else {
-      return Process.runSync('ps', ['-A', '|', 'grep' 'LeagueClientUx']);
+      return await Process.run('ps', ['-A', '|', 'grep' 'LeagueClientUx']);
     }
   }
 
@@ -63,14 +56,14 @@ class AppController extends GetxController {
   }
 
   Future<void> setUpClient() async {
-    final leagueClientProcess = findProcess();
+    final leagueClientProcess = await findProcess();
 
     final token = _tokenRegex.firstMatch(leagueClientProcess.stdout)?.group(1);
     final port = _portRegex.firstMatch(leagueClientProcess.stdout)?.group(1);
 
-    if (port == null || token == null) return await Future.delayed(const Duration(seconds: 2)).then((_) async => await setUpClient());
+    if (port == null || token == null) return Future.delayed(const Duration(seconds: 2)).then((_) => setUpClient());
 
-    return await finishSetUp(port, token);
+    return finishSetUp(port, token);
   }
 
   @override

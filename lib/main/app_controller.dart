@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:league_butler/database/database.dart';
 import 'package:league_butler/database/database_keys.dart';
+import 'package:league_butler/gateway/gateway_default_settings.dart';
+import 'package:league_butler/models/main/summoner_model.dart';
 import 'package:league_butler/screens/waiting/controller/waiting_controller.dart';
+import 'package:league_butler/service/data_dragon_service.dart';
 import 'package:league_butler/service/lcu_service.dart';
 import 'package:league_butler/utils/logger.dart';
 
@@ -17,20 +20,25 @@ class AppController extends GetxController {
   String? port;
   String? token;
 
+  Rx<SummonerModel?> summoner = Rx<SummonerModel?>(null);
+
   bool get isConnected => connected.value;
 
   LCUService? lcuService;
-
+  final DataDragonService dataDragonService = DataDragonService();
   void disconnect() {
     connected.value = false;
     Database().clearNonPersistent();
-    Get.delete<LCUService>().then((_) => lcuService = null);
+    Get.delete<LCUService>().then((_) {
+      lcuService = null;
+      findProcess();
+    });
   }
 
   // TODO: Use WebSockets instead of HTTP
   void healthCheck() {
-    lcuService?.ping();
-    Future.delayed(const Duration(seconds: 5)).then((_) => healthCheck());
+    // lcuService?.ping();
+    // Future.delayed(const Duration(seconds: 5)).then((_) => healthCheck());
   }
 
   Future<ProcessResult> findProcess() async {
@@ -45,10 +53,12 @@ class AppController extends GetxController {
     logger.d('Found LeagueClientUx.exe with token $token and port $port');
     connected.value = true;
 
-    lcuService = Get.put<LCUService>(LCUService(port: port));
+    lcuService = Get.put<LCUService>(LCUService(port: port, gatewaySettings: await GatewayDefaultSettings.localClientSettings(port: port)));
 
     Database().write(DatabaseKeys.localTokenBase64, base64.encode('riot:$token'.codeUnits));
-    healthCheck();
+
+    setInitialInformation();
+    // healthCheck();
     Get.find<WaitingController>().didConnect = true;
   }
 
@@ -67,5 +77,15 @@ class AppController extends GetxController {
   void onInit() {
     super.onInit();
     setUpClient();
+  }
+
+  Future<void> setInitialInformation() async {
+    final service = lcuService;
+    if (service == null) return disconnect();
+
+    service.test();
+
+
+    summoner.value = await service.getCurrentSummoner();
   }
 }

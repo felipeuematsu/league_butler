@@ -6,6 +6,7 @@ import 'package:league_butler/commons/lib_color_schemes.g.dart';
 import 'package:league_butler/commons/routes.dart';
 import 'package:league_butler/database/database.dart';
 import 'package:league_butler/database/database_keys.dart';
+import 'package:league_butler/gateway/client/data_dragon_client.dart';
 import 'package:league_butler/main/app_controller.dart';
 import 'package:league_butler/utils/screen_helper.dart';
 
@@ -14,6 +15,7 @@ import 'commons/strings.dart';
 Future<void> initDependencies() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Database().init();
+  DataDragonClient.init();
 }
 
 Future<void> main() async {
@@ -22,7 +24,7 @@ Future<void> main() async {
   runApp(LeagueButler(locale: await database.read<Locale>(DatabaseKeys.locale, persistent: true)));
 
   doWhenWindowReady(() async {
-    final size = await database.read<ScreenSize>(DatabaseKeys.windowSize) ?? ScreenSize.s1600x900;
+    final size = await database.read<ScreenSize>(DatabaseKeys.windowSize) ?? ScreenSize.s768x432;
     appWindow.minSize = size.size;
     appWindow.maxSize = size.size;
     appWindow.size = size.size;

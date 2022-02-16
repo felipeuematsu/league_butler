@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:league_butler/commons/images_constants.dart';
 import 'package:league_butler/commons/routes.dart';
 import 'package:league_butler/commons/strings.dart';
+import 'package:league_butler/main/app_controller.dart';
 import 'package:league_butler/screens/waiting/waiting_strings.dart';
 
 class WaitingController extends GetxController with GetSingleTickerProviderStateMixin {
@@ -29,7 +30,6 @@ class WaitingController extends GetxController with GetSingleTickerProviderState
     _animationController.forward();
 
     return continuousAnimation();
-
   }
 
   Future<void> continuousAnimation() async {
@@ -44,11 +44,11 @@ class WaitingController extends GetxController with GetSingleTickerProviderState
     return await goToHome();
   }
 
-
   Future<void> goToHome() async {
     textContent.value = WaitingStrings.clientFound.tr;
     _animationController.value = 1;
     await Future.delayed(const Duration(seconds: 3));
+    await Get.find<AppController>().setInitialInformation();
     await Get.offAllNamed(Routes.home.route);
   }
 

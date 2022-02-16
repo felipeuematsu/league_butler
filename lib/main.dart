@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:league_butler/commons/config_override.dart';
 import 'package:league_butler/commons/lib_color_schemes.g.dart';
 import 'package:league_butler/commons/routes.dart';
 import 'package:league_butler/database/database.dart';
@@ -13,6 +16,7 @@ import 'package:league_butler/utils/screen_helper.dart';
 import 'commons/strings.dart';
 
 Future<void> initDependencies() async {
+  HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   await Database().init();
   DataDragonClient.init();
@@ -52,7 +56,6 @@ class LeagueButler extends StatelessWidget {
       initialRoute: Routes.waitingConnection.route,
       theme: ThemeData.from(colorScheme: lightColorScheme, textTheme: GoogleFonts.robotoTextTheme().apply(fontFamily: 'RobotoSerif')),
       darkTheme: ThemeData.from(colorScheme: darkColorScheme, textTheme: GoogleFonts.robotoTextTheme().apply(fontFamily: 'RobotoSerif')),
-      // darkTheme: ThemeData.from(colorScheme: darkColorScheme).copyWith(textTheme: GoogleFonts.getTextTheme('RobotoSerif')),
     );
   }
 }

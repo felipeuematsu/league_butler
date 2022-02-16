@@ -53,9 +53,9 @@ extension ScreenSizeExt on ScreenSize {
   double get scale {
     switch (this) {
       case ScreenSize.s768x432:
-        return 1.0;
+        return 432 / 768;
       case ScreenSize.s1024x576:
-        return 1024 / 432;
+        return 1.0;
       case ScreenSize.s1280x720:
         return 1280 / 768;
       case ScreenSize.s1600x900:

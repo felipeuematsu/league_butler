@@ -11,6 +11,7 @@ class QueueController extends GetxController {
   bool get isQueueEnabled => queueConfiguration.value.isActivated;
 
   set queueStatus(bool val) => queueConfiguration.update((QueueConfiguration? config) async {
+    logger.i(config);
     if (config == null) return;
     config.isActivated = val;
     logger.i('saving queue configuration with ${queueConfiguration.value.isActivated}');

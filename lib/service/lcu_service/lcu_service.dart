@@ -15,13 +15,19 @@ class LCUService extends GetxService {
 
   final GatewaySettings _settings, _webSocketSettings;
 
-  late final LCUClient _restClient = LCUClient.init(settings: _settings);
+  late LCUClient _restClient = LCUClient.init(settings: _settings);
+
+  void reconnect() {
+    _restClient.close(force: true);
+    _restClient = LCUClient.init(settings: _settings);
+  }
 
   late final LCUWebSocketClient _websocketClient = LCUWebSocketClient(settings: _webSocketSettings);
 
   IOWebSocketChannel? _channel;
 
   Future<Response> _get(String path) async => await _restClient.get(path[0] == '/' ? path : '/$path');
+
   Future<Response> _post(String path, [Map? body]) async => await _restClient.post(path[0] == '/' ? path : '/$path', data: body);
 
   List<String> currentEvents = [];
@@ -36,6 +42,7 @@ class LCUService extends GetxService {
   Future<dynamic> getSessionStatus() async {
     final response = await _get('/lol-login/v1/session/');
     final data = response.data;
+    logger.d(data);
     return data.toString().isNotEmpty ? data as Map<String, dynamic> : <String, dynamic>{'response': data};
   }
 
@@ -69,11 +76,12 @@ class LCUService extends GetxService {
     return _channel = connection;
   }
 
-  Future<void> disconnectWebSocket() async {
+  Future<bool> disconnectWebSocket() async {
     final channel = _channel;
-    if (channel == null) return;
+    if (channel == null) return false;
     await channel.sink.close();
     _channel = null;
+    return true;
   }
 
   bool addEvent(String event) {

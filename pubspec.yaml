@@ -55,7 +55,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.1.7
-
+  msix: ^3.1.2
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -143,3 +143,21 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+msix_config:
+  display_name: League Butler
+  publisher_name: Flup
+#  identity_name: Dev.Flup.LeagueButler
+  msix_version: 0.0.1.0
+#  icons_background_color: ffffff
+#  architecture: x64
+
+  app_installer:
+    publish_folder_path: "c:\Program Files\League Butler"
+    hours_between_update_checks: 0
+    automatic_background_task: true
+    update_blocks_activation: true
+    show_prompt: true
+    force_update_from_any_version: false
+#  logo_path: C:\<PathToIcon>\<Logo.png>
+#  start_menu_icon_path: C:\<PathToIcon>\<Icon.png>
+#  tile_icon_path: C:\<PathToIcon>\<Icon.png>

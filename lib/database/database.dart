@@ -9,6 +9,7 @@ import 'package:league_butler/database/util/abstract_flutter_secure_storage.dart
 import 'package:league_butler/database/util/abstract_hive.dart';
 import 'package:league_butler/database/util_impl/flutter_secure_storage_impl.dart';
 import 'package:league_butler/database/util_impl/hive_impl.dart';
+import 'package:league_butler/utils/logger.dart';
 
 class Database {
   Database._internal();
@@ -25,17 +26,20 @@ class Database {
   bool Function(int, int) get _strategy => (entries, deletedEntries) => deletedEntries > 50;
 
   Future<void> init() async {
+    logger.d('Initializing database');
     DatabaseAdapters.registerAdapters();
     await _hive?.init(databaseFolder);
     final encryptedKey = await _getEncryptedKey();
     final encryptionKey = base64Url.decode(encryptedKey);
     _box = await _hive?.openBox(nonPersistentDatabase, HiveAesCipher(encryptionKey), _strategy);
     _persistentBox = await _hive?.openBox(persistentDatabase, HiveAesCipher(encryptionKey), _strategy);
+    logger.d('Database initialized');
   }
 
   Future<String> _getEncryptedKey() async {
     if (false == await _secureStorage?.containsKey(key: cryptoKeyName)) await _secureStorage?.write(key: cryptoKeyName, value: base64Url.encode(cryptoKey.codeUnits));
     final key = await _secureStorage?.read(key: cryptoKeyName);
+    if (key == null) logger.d('No encryption key found');
     if (key == null) throw WLDatabaseEncryptionKeyException();
     return key;
   }
@@ -47,6 +51,7 @@ class Database {
   }
 
   Future<void> write(key, dynamic value, {bool persistent = false}) async {
+    logger.d('Writing to database: $key\nValue: $value');
     await (persistent ? writePersistent(_keyAsString(key), value) : writeNonPersistent(_keyAsString(key), value));
   }
 

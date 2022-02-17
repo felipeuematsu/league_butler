@@ -7,6 +7,8 @@ import 'package:league_butler/database/database_keys.dart';
 class ScreenHelper {
   ScreenHelper._();
 
+  static var isShowingDialog = false;
+
   static double get scale => getScreenSize.scale;
 
   static ScreenSize get getScreenSize {

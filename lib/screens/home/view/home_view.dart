@@ -8,7 +8,7 @@ class HomeView extends GetView<HomeViewController> {
 
   @override
   Widget build(BuildContext context) {
-    return const ConnectedScaffold(
+    return ConnectedScaffold(
       // body: Text('Connected!'),
     );
   }

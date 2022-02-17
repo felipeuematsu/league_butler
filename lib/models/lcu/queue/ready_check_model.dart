@@ -1,18 +1,18 @@
 class ReadyCheckModel {
-  ReadyCheckModel({this.dodgeWarning, this.playerResponse, this.state, this.suppressUx, this.timer});
+  ReadyCheckModel({this.dodgeWarning, this.playerResponse, this.state, this.suppressUx, this.timer = 0});
 
   ReadyCheckModel.fromJson(Map<String, dynamic> json) :
     dodgeWarning = json['dodgeWarning'],
     playerResponse = json['playerResponse'],
     state = json['state'],
     suppressUx = json['suppressUx'],
-    timer = json['timer'];
+    timer = json['timer'] ?? 0.0;
 
   String? dodgeWarning;
   String? playerResponse;
   String? state;
   bool? suppressUx;
-  int? timer;
+  double timer;
 
   Map<String, dynamic> toJson() => {
         'dodgeWarning': dodgeWarning,

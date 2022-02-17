@@ -11,6 +11,9 @@ import 'package:league_butler/database/database.dart';
 import 'package:league_butler/database/database_keys.dart';
 import 'package:league_butler/gateway/client/data_dragon_client.dart';
 import 'package:league_butler/main/app_controller.dart';
+import 'package:league_butler/main/features/ban_controller.dart';
+import 'package:league_butler/main/features/pick_controller.dart';
+import 'package:league_butler/main/features/queue_controller.dart';
 import 'package:league_butler/utils/screen_helper.dart';
 
 import 'commons/strings.dart';
@@ -46,6 +49,9 @@ class LeagueButler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(AppController());
+    Get.put(QueueController());
+    Get.put(BanController());
+    Get.put(PickController());
 
     return GetMaterialApp(
       translations: Strings(),

@@ -8,7 +8,6 @@ class SummonerModel {
     privacy,
     profileIconId,
     puuid,
-    rerollPoints,
     summonerId,
     summonerLevel,
     unnamed,
@@ -25,7 +24,6 @@ class SummonerModel {
         privacy = json['privacy'],
         profileIconId = json['profileIconId'],
         puuid = json['puuid'],
-        rerollPoints = RerollPoints.fromJson(json['rerollPoints'] as Map<String, dynamic>),
         summonerId = json['summonerId'],
         summonerLevel = json['summonerLevel'],
         unnamed = json['unnamed'],
@@ -40,7 +38,6 @@ class SummonerModel {
   String? privacy;
   int? profileIconId;
   String? puuid;
-  RerollPoints? rerollPoints;
   int? summonerId;
   int? summonerLevel;
   bool? unnamed;
@@ -56,36 +53,10 @@ class SummonerModel {
         'privacy': privacy,
         'profileIconId': profileIconId,
         'puuid': puuid,
-        'rerollPoints': rerollPoints?.toJson(),
         'summonerId': summonerId,
         'summonerLevel': summonerLevel,
         'unnamed': unnamed,
         'xpSinceLastLevel': xpSinceLastLevel,
         'xpUntilNextLevel': xpUntilNextLevel,
-      };
-}
-
-class RerollPoints {
-  RerollPoints({currentPoints, maxRolls, numberOfRolls, pointsCostToRoll, pointsToReroll});
-
-  RerollPoints.fromJson(Map<String, dynamic> json)
-      : currentPoints = json['currentPoints'],
-        maxRolls = json['maxRolls'],
-        numberOfRolls = json['numberOfRolls'],
-        pointsCostToRoll = json['pointsCostToRoll'],
-        pointsToReroll = json['pointsToReroll'];
-
-  int? currentPoints;
-  int? maxRolls;
-  int? numberOfRolls;
-  int? pointsCostToRoll;
-  int? pointsToReroll;
-
-  Map<String, dynamic> toJson() => {
-        'currentPoints': currentPoints,
-        'maxRolls': maxRolls,
-        'numberOfRolls': numberOfRolls,
-        'pointsCostToRoll': pointsCostToRoll,
-        'pointsToReroll': pointsToReroll,
       };
 }

@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:league_butler/commons/routes.dart';
+import 'package:league_butler/components/scaffolds/horizontal_status_bar/controller/status_bar_controller.dart';
 import 'package:league_butler/database/database.dart';
 import 'package:league_butler/database/database_keys.dart';
 import 'package:league_butler/gateway/gateway_default_settings.dart';
-import 'package:league_butler/models/lcu/summoner_model.dart';
+import 'package:league_butler/models/lcu/lcu_websocket_response.dart';
+import 'package:league_butler/models/lcu/queue/ready_check_model.dart';
 import 'package:league_butler/screens/waiting/controller/waiting_controller.dart';
 import 'package:league_butler/service/data_dragon_service.dart';
 import 'package:league_butler/service/lcu_service/lcu_service.dart';
@@ -18,19 +20,20 @@ final _tokenRegex = RegExp('--remoting-auth-token=([\\w-]*)');
 final _portRegex = RegExp('--app-port=(\\d*)');
 
 class AppController extends GetxController {
-  final connected = false.obs;
-  bool get isConnected => connected.value;
-
   String? port;
   String? token;
 
-  Rx<SummonerModel?> summoner = Rx<SummonerModel?>(null);
 
   LCUService? lcuService;
   final DataDragonService dataDragonService = Get.put(DataDragonService());
 
+  @override
+  void onInit() {
+    super.onInit();
+    setUpRestClient();
+  }
+
   void disconnect() {
-    connected.value = false;
     Database().clearNonPersistent();
     lcuService?.disconnectWebSocket();
     Get.delete<LCUService>().then((_) {
@@ -40,18 +43,10 @@ class AppController extends GetxController {
     });
   }
 
-  Future<ProcessResult> findProcess() async {
-    if (Platform.isWindows) {
-      return await Process.run('wmic', ['PROCESS', 'WHERE', "name='LeagueClientUx.exe'", 'GET', 'commandline']);
-    } else {
-      return await Process.run('ps', ['-A', '|', 'grep' 'LeagueClientUx']);
-    }
-  }
+  Future<ProcessResult> findProcess() async =>
+      await (Platform.isWindows ? Process.run('wmic', ['PROCESS', 'WHERE', "name='LeagueClientUx.exe'", 'GET', 'commandline']) : Process.run('ps', ['-A', '|', 'grep' 'LeagueClientUx']));
 
   Future<void> finishSetUp(port, token) async {
-    logger.d('Found LeagueClientUx.exe with token $token and port $port');
-    connected.value = true;
-
     lcuService = Get.put<LCUService>(LCUService(
       restClientSettings: await GatewayDefaultSettings.localClientSettings(port: port),
       webSocketClientSettings: await GatewayDefaultSettings.localClientWebSocketSettings(port: port),
@@ -62,20 +57,12 @@ class AppController extends GetxController {
     Get.find<WaitingController>().didConnect = true;
   }
 
-  Future<void> setUpClient() async {
+  Future<void> setUpRestClient() async {
     final leagueClientProcess = await findProcess();
-
     final token = _tokenRegex.firstMatch(leagueClientProcess.stdout)?.group(1);
     final port = _portRegex.firstMatch(leagueClientProcess.stdout)?.group(1);
-
-    if (port == null || token == null) return Future.delayed(const Duration(seconds: 2)).then((_) => setUpClient());
+    if (port == null || token == null) return Future.delayed(const Duration(seconds: 2)).then((_) => setUpRestClient());
     return finishSetUp(port, token);
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    setUpClient();
   }
 
   Future<void> setUpWebSocket() async {
@@ -85,20 +72,29 @@ class AppController extends GetxController {
 
     service.addEvents(const [wsQueueSearch, wsReadyCheck]);
 
-    lcuWebSocket.stream.listen((event) {
-      if (event is String && event.isNotEmpty) {
-        final List<dynamic> list = json.decode(event.toString());
-        final String eventName = list.elementAt(1);
-        final Map<String, dynamic> eventData = list.elementAt(2);
-        logger.d('Received event $eventName with data: $eventData');
-        switch (eventName) {
-          case wsQueueSearch:
-            summoner.value = SummonerModel.fromJson(eventData);
-            break;
-          case wsReadyCheck:
-            summoner.value = null;
-            break;
-        }
+    lcuWebSocket.stream.listen((event) async {
+      final response = LCUWebSocketResponse.fromEvent(event);
+      if (response == null) return;
+
+      var isFalse2 = Get.find<StatusBarController>().queueStatus.isFalse;
+      logger.d('readyCheck is off: $isFalse2');
+      // logger.d('Received event ${response.event} with data: ${response.data}');
+      switch (response.event) {
+          /* TODO: Implement when queue logic is ready
+        case wsQueueSearch:
+          if (Get.find<StatusBarController>().queueStatus.isFalse) return;
+          final queueSearch = QueueSearchModel.fromJson(response.data.data);
+          break;  */
+        case wsReadyCheck:
+          if (isFalse2) return;
+
+          logger.e('Received ready check');
+          final readyCheckResponse = ReadyCheckModel.fromJson(response.data.data);
+          if (readyCheckResponse.timer > 8) {
+            logger.d('Ready check timer is greater than 8 seconds');
+            service.acceptReadyCheck();
+          }
+          break;
       }
     });
   }
@@ -106,15 +102,16 @@ class AppController extends GetxController {
   Future<void> setInitialInformation() async {
     final service = lcuService;
     if (service == null) return disconnect();
-
-    while (summoner.value == null) {
+    while (true) {
       try {
-        final response = await service.getCurrentSummoner();
-        summoner.value = response;
-        setUpWebSocket();
+        final response = await service.getSessionStatus();
+        logger.d('Session status: $response');
+        lcuService?.test();
+
+        return setUpWebSocket();
       } on DioError catch (e) {
         if (e.response?.statusCode != 404) return disconnect();
-          await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 2));
       }
     }
   }

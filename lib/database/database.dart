@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:league_butler/database/adapters.dart';
 import 'package:league_butler/database/constants.dart';
 import 'package:league_butler/database/exception/wl_database_encryption_key_exception.dart';
 import 'package:league_butler/database/util/abstract_flutter_secure_storage.dart';
@@ -24,7 +25,8 @@ class Database {
   bool Function(int, int) get _strategy => (entries, deletedEntries) => deletedEntries > 50;
 
   Future<void> init() async {
-    await _hive?.init();
+    DatabaseAdapters.registerAdapters();
+    await _hive?.init(databaseFolder);
     final encryptedKey = await _getEncryptedKey();
     final encryptionKey = base64Url.decode(encryptedKey);
     _box = await _hive?.openBox(nonPersistentDatabase, HiveAesCipher(encryptionKey), _strategy);

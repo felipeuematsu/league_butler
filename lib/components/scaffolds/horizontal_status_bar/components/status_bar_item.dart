@@ -10,12 +10,14 @@ class StatusBarItem extends GetView<StatusBarController> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
       child: Obx(() => MaterialButton(
-            elevation: 10,
-            color: controller.isActivated(type).isTrue ? Colors.greenAccent : Colors.red,
-            shape: const CircleBorder(),
+            elevation: 2,
+            color: controller.isActivated(type).value ? Colors.greenAccent.withOpacity(0.6) : Get.theme.colorScheme.surfaceVariant.withOpacity(0.5),
             onPressed: () => controller.onTap(type),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
               child: Column(
@@ -24,12 +26,12 @@ class StatusBarItem extends GetView<StatusBarController> {
                   Icon(
                     controller.getIcon(type),
                     size: 24,
-                    color: controller.isActivated(type).value ? Colors.white : Colors.black,
+                    color: controller.isActivated(type).isTrue ? Colors.white : Colors.black,
                   ),
                   Text(
                     type.name,
                     style: Get.textTheme.labelSmall?.copyWith(
-                      color: controller.isActivated(type).value ? Colors.white : Colors.black,
+                      color: controller.isActivated(type).isTrue ? Colors.white : Colors.black,
                     ),
                   ),
                 ],

@@ -61,8 +61,8 @@ class WaitingController extends GetxController with GetSingleTickerProviderState
   }
 
   @override
-  void onClose() {
+  void dispose() {
     _animationController.dispose();
-    super.onClose();
+    super.dispose();
   }
 }

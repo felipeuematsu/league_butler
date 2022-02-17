@@ -1,8 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:league_butler/components/scaffolds/window_buttons.dart';
-import 'package:league_butler/utils/screen_helper.dart';
+import 'package:league_butler/screens/components/scaffolds/window_buttons.dart';
 
 class WindowScaffold extends StatelessWidget {
   const WindowScaffold({Key? key, this.body, this.background}) : super(key: key);
@@ -51,7 +50,7 @@ class _CustomMoveWindow extends StatelessWidget {
       child: Row(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 4.scale, top: 2.scale),
+            padding: const EdgeInsets.only(left: 4, top: 2),
             child: Icon(
               Icons.ac_unit,
               color: Get.theme.colorScheme.tertiary,

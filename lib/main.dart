@@ -31,9 +31,8 @@ Future<void> main() async {
   runApp(LeagueButler(locale: await database.read<Locale>(DatabaseKeys.locale, persistent: true)));
 
   doWhenWindowReady(() async {
-    final size = await database.read<ScreenSize>(DatabaseKeys.windowSize) ?? ScreenSize.s768x432;
-    appWindow.minSize = size.size;
-    appWindow.maxSize = size.size;
+    final size = await database.read<ScreenSize>(DatabaseKeys.windowSize) ?? ScreenSize.s1024x576;
+    appWindow.minSize = ScreenSize.s1024x576.size;
     appWindow.size = size.size;
     appWindow.alignment = Alignment.center;
     appWindow.title = CommonStrings.leagueButler.tr;

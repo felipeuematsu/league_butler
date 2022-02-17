@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:league_butler/components/scaffolds/window_scaffold.dart';
+import 'package:league_butler/screens/components/scaffolds/window_scaffold.dart';
 import 'package:league_butler/screens/coming_soon/coming_soon_strings.dart';
 import 'package:league_butler/screens/waiting/waiting_strings.dart';
 import 'package:league_butler/utils/screen_helper.dart';

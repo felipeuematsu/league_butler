@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:league_butler/commons/routes.dart';
-import 'package:league_butler/components/scaffolds/horizontal_status_bar/controller/status_bar_controller.dart';
+import 'package:league_butler/screens/components/scaffolds/horizontal_status_bar/controller/status_bar_controller.dart';
 import 'package:league_butler/database/database.dart';
 import 'package:league_butler/database/database_keys.dart';
 import 'package:league_butler/gateway/gateway_default_settings.dart';

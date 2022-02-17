@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:league_butler/database/database.dart';
 import 'package:league_butler/database/database_keys.dart';
-import 'package:league_butler/models/configuration/pick_configuration.dart';
+import 'package:league_butler/models/database/pick_configuration.dart';
 import 'package:league_butler/utils/logger.dart';
 
 class PickController extends GetxController {

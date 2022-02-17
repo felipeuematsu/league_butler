@@ -1,11 +1,12 @@
 import 'package:get/get.dart';
 import 'package:league_butler/database/database.dart';
 import 'package:league_butler/database/database_keys.dart';
-import 'package:league_butler/models/configuration/queue_configuration.dart';
+import 'package:league_butler/models/database/queue_configuration.dart';
 import 'package:league_butler/utils/logger.dart';
 
 class QueueController extends GetxController {
   late Rx<QueueConfiguration> queueConfiguration;
+  var currentQueueId = -1;
 
   bool get isQueueEnabled => queueConfiguration.value.isActivated;
 

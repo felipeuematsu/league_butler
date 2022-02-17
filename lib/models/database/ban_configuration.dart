@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:league_butler/models/data_dragon/champion/champion_model.dart';
-import 'package:league_butler/models/configuration/lanes.dart';
+import 'package:league_butler/models/database/lanes.dart';
 
 part 'ban_configuration.g.dart';
 

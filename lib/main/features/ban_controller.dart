@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:league_butler/database/database.dart';
 import 'package:league_butler/database/database_keys.dart';
-import 'package:league_butler/models/configuration/ban_configuration.dart';
+import 'package:league_butler/models/database/ban_configuration.dart';
 
 class BanController extends GetxController {
   late final Rx<BanConfiguration> banConfiguration;

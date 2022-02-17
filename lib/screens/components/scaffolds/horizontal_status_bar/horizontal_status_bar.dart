@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:league_butler/components/scaffolds/horizontal_status_bar/components/status_bar_item.dart';
-import 'package:league_butler/components/scaffolds/horizontal_status_bar/controller/status_bar_controller.dart';
+import 'package:league_butler/screens/components/scaffolds/horizontal_status_bar/components/status_bar_item.dart';
+import 'package:league_butler/screens/components/scaffolds/horizontal_status_bar/controller/status_bar_controller.dart';
 
 class HorizontalStatusBar extends GetView<StatusBarController> {
   const HorizontalStatusBar({Key? key}) : super(key: key);

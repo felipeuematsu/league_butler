@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:league_butler/components/scaffolds/horizontal_status_bar/controller/status_bar_controller.dart';
+import 'package:league_butler/screens/components/scaffolds/horizontal_status_bar/controller/status_bar_controller.dart';
 
 class StatusBarItem extends GetView<StatusBarController> {
   const StatusBarItem({Key? key, required this.type}) : super(key: key);

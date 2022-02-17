@@ -11,8 +11,6 @@ class ScreenHelper {
 
   static ScreenSize get getScreenSize {
     switch (appWindow.size.width.toInt()) {
-      case 432:
-        return ScreenSize.s768x432;
       case 1280:
         return ScreenSize.s1280x720;
       case 1600:
@@ -30,7 +28,6 @@ class ScreenHelper {
 }
 
 enum ScreenSize {
-  s768x432,
   s1024x576,
   s1280x720,
   s1600x900,
@@ -39,8 +36,6 @@ enum ScreenSize {
 extension ScreenSizeExt on ScreenSize {
   Size get size {
     switch (this) {
-      case ScreenSize.s768x432:
-        return const Size(768, 432);
       case ScreenSize.s1024x576:
         return const Size(1024, 576);
       case ScreenSize.s1280x720:
@@ -52,8 +47,6 @@ extension ScreenSizeExt on ScreenSize {
 
   double get scale {
     switch (this) {
-      case ScreenSize.s768x432:
-        return 432 / 768;
       case ScreenSize.s1024x576:
         return 1.0;
       case ScreenSize.s1280x720:
@@ -69,3 +62,5 @@ extension NumExt on num {
     return this * ScreenHelper.getScreenSize.scale;
   }
 }
+
+double scale(num value) => value * ScreenHelper.getScreenSize.scale;

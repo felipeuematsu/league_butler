@@ -10,4 +10,8 @@ class QueueConfiguration {
   List<int> activatedQueues = [];
   @HiveField(2, defaultValue: false)
   var rankedActivated = false;
+  @HiveField(3, defaultValue: false)
+  var coopVsIaActivated = false;
+  @HiveField(4, defaultValue: false)
+  var casualActivated = false;
 }

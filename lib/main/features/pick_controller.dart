@@ -9,9 +9,9 @@ class PickController extends GetxController {
 
   bool get isPickEnabled => pickConfiguration.value.isActivated;
 
-  set pickStatus(bool val) => pickConfiguration.update((config) async {
+  void togglePickStatus() => pickConfiguration.update((config) async {
     if (config == null) return;
-    config.isActivated = val;
+    config.isActivated = !isPickEnabled;
     logger.i('saving pick configuration with ${pickConfiguration.value.isActivated}');
     Database().write(DatabaseKeys.pickConfiguration, config, persistent: true);
     logger.i('reading pick configuration: ${(await Database().read<PickConfiguration>(DatabaseKeys.pickConfiguration, persistent: true))?.isActivated}');

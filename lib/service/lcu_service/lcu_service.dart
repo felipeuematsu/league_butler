@@ -15,12 +15,7 @@ class LCUService extends GetxService {
 
   final GatewaySettings _settings, _webSocketSettings;
 
-  late LCUClient _restClient = LCUClient.init(settings: _settings);
-
-  void reconnect() {
-    _restClient.close(force: true);
-    _restClient = LCUClient.init(settings: _settings);
-  }
+  late final LCUClient _restClient = LCUClient.init(settings: _settings);
 
   late final LCUWebSocketClient _websocketClient = LCUWebSocketClient(settings: _webSocketSettings);
 
@@ -115,4 +110,6 @@ class LCUService extends GetxService {
     currentEvents.remove(event);
     return true;
   }
+
+
 }

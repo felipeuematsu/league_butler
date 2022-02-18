@@ -14,18 +14,16 @@ class ConnectedScaffold extends GetView<AppController> {
   Widget build(BuildContext context) {
     return WindowScaffold(
       body: Stack(
-        alignment: Alignment.center,
+        fit: StackFit.loose,
         children: [
           Positioned(
             top: 64,
             left: 64,
-            bottom: 0,
-            right: 0,
             child: body ?? Container(),
           ),
           Positioned.fill(
-            child: Material(
-              elevation: 10,
+            child: Container(
+              color: Colors.transparent,
               child: Stack(
                 children: const [
                   Positioned(

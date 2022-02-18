@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:league_butler/commons/interfaces/abstract_translations.dart';
 import 'package:league_butler/screens/coming_soon/coming_soon_strings.dart';
 import 'package:league_butler/screens/home/home_strings.dart';
+import 'package:league_butler/screens/queue/queue_strings.dart';
 import 'package:league_butler/screens/waiting/waiting_strings.dart';
 
 class Strings extends Translations {
@@ -10,6 +11,7 @@ class Strings extends Translations {
         HomeTranslations(),
         WaitingTranslations(),
         ComingSoonTranslations(),
+        QueueTranslations(),
       ];
 
   @override

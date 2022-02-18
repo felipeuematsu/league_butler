@@ -7,7 +7,7 @@ class QueueConfiguration {
   @HiveField(0, defaultValue: false)
   var isActivated = false;
   @HiveField(1, defaultValue: [])
-  List<int> activatedQueues = [];
+  List<int> deactivatedQueues = [];
   @HiveField(2, defaultValue: false)
   var rankedActivated = false;
   @HiveField(3, defaultValue: false)

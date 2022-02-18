@@ -1,3 +1,5 @@
+
+
 enum Queue {
   blindPick,
   normal,
@@ -7,16 +9,23 @@ enum Queue {
   others,
 }
 
+enum QueueType {
+  ranked,
+  casual,
+  coopVsAI,
+  custom,
+}
+
 extension QueueExt on Queue {
-
-  // int get id {
-  //   switch (this) {
-  //     case Queue.blindPick: return 0;
-  //     case Queue.normal: return 1;
-  //     case Queue.soloQueue: return 2;
-  //     case Queue.flexQueue: return 3;
-  //     case Queue.others: return 0;
-  //   }
-  // }
-
+  QueueType get type {
+    switch (this) {
+      case Queue.soloQueue:
+      case Queue.flexQueue:
+        return QueueType.ranked;
+      case Queue.custom:
+        return QueueType.custom;
+      default:
+        return QueueType.casual;
+    }
+  }
 }

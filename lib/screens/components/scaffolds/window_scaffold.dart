@@ -12,10 +12,10 @@ class WindowScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WindowBorder(
-      color: Colors.transparent,
+      color: Colors.white,
       child: Stack(
         children: [
-          Positioned.fill(child: background ?? Container(color: Get.theme.colorScheme.background,)),
+          Positioned.fill(child: background ?? Container(color: Get.theme.colorScheme.background)),
           Positioned.fill(
             child: Column(
               children: [

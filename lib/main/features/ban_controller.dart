@@ -8,9 +8,9 @@ class BanController extends GetxController {
 
   bool get banStatus => banConfiguration.value.isActivated;
 
-  set banStatus(bool val) => banConfiguration.update((config) async {
+  void toggleBanStatus() => banConfiguration.update((config) async {
     if (config == null) return;
-    config.isActivated = val;
+    config.isActivated = !banStatus;
     Database().write(DatabaseKeys.banConfiguration, config, persistent: true);
   });
   @override

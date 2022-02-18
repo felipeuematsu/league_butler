@@ -13,11 +13,9 @@ class StatusBarItem extends GetView<StatusBarController> {
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
       child: Obx(() => MaterialButton(
             elevation: 2,
-            color: controller.isActivated(type).value ? Colors.greenAccent.withOpacity(0.6) : Get.theme.colorScheme.surfaceVariant.withOpacity(0.5),
+            color: controller.isActivated(type) ? Colors.greenAccent.withOpacity(0.6) : Get.theme.colorScheme.surfaceVariant.withOpacity(0.5),
             onPressed: () => controller.onTap(type),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
               child: Column(
@@ -26,12 +24,12 @@ class StatusBarItem extends GetView<StatusBarController> {
                   Icon(
                     controller.getIcon(type),
                     size: 24,
-                    color: controller.isActivated(type).isTrue ? Colors.white : Colors.black,
+                    color: controller.isActivated(type) ? Colors.white : Colors.black,
                   ),
                   Text(
-                    type.name,
+                    controller.getButtonText(type),
                     style: Get.textTheme.labelSmall?.copyWith(
-                      color: controller.isActivated(type).isTrue ? Colors.white : Colors.black,
+                      color: controller.isActivated(type) ? Colors.white : Colors.black,
                     ),
                   ),
                 ],
@@ -39,40 +37,5 @@ class StatusBarItem extends GetView<StatusBarController> {
             ),
           )),
     );
-
-    // return GestureDetector(
-    //   onTap: () => controller.onTap(type),
-    //   child: Obx(
-    //     () => Container(
-    //         margin: const EdgeInsets.all(4),
-    //         child: MouseRegion(
-    //           cursor: SystemMouseCursors.click,
-    //           child: Material(
-    //             elevation: 10,
-    //             shape: const CircleBorder(),
-    //             color: controller.isActivated(type).value ? Colors.green.shade400 : Colors.red.shade500,
-    //             child: Container(
-    //               width: 60,
-    //               padding: const EdgeInsets.all(8),
-    //               child: Column(
-    //                 children: [
-    //                   Icon(
-    //                     controller.getIcon(type),
-    //                     size: 24,
-    //                     color: controller.isActivated(type).value ? Colors.white : Colors.black,
-    //                   ),
-    //                   Text(
-    //                     type.name,
-    //                     style: Get.textTheme.labelSmall?.copyWith(
-    //                       color: controller.isActivated(type).value ? Colors.white : Colors.black,
-    //                     ),
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           ),
-    //         )),
-    //   ),
-    // );
   }
 }

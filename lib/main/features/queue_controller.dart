@@ -10,10 +10,10 @@ class QueueController extends GetxController {
 
   bool get isQueueEnabled => queueConfiguration.value.isActivated;
 
-  set queueStatus(bool val) => queueConfiguration.update((QueueConfiguration? config) async {
+  void toggleQueueStatus() => queueConfiguration.update((QueueConfiguration? config) async {
     logger.i(config);
     if (config == null) return;
-    config.isActivated = val;
+    config.isActivated = !isQueueEnabled;
     logger.i('saving queue configuration with ${queueConfiguration.value.isActivated}');
     Database().write(DatabaseKeys.queueConfiguration, config, persistent: true);
     logger.i('reading queue configuration: ${(await Database().read<QueueConfiguration>(DatabaseKeys.queueConfiguration, persistent: true))?.isActivated}');

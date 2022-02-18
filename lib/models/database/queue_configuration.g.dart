@@ -18,7 +18,7 @@ class QueueConfigurationAdapter extends TypeAdapter<QueueConfiguration> {
     };
     return QueueConfiguration()
       ..isActivated = fields[0] == null ? false : fields[0] as bool
-      ..activatedQueues =
+      ..deactivatedQueues =
           fields[1] == null ? [] : (fields[1] as List).cast<int>()
       ..rankedActivated = fields[2] == null ? false : fields[2] as bool;
   }
@@ -30,7 +30,7 @@ class QueueConfigurationAdapter extends TypeAdapter<QueueConfiguration> {
       ..writeByte(0)
       ..write(obj.isActivated)
       ..writeByte(1)
-      ..write(obj.activatedQueues)
+      ..write(obj.deactivatedQueues)
       ..writeByte(2)
       ..write(obj.rankedActivated);
   }

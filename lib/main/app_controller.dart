@@ -66,10 +66,10 @@ class AppController extends GetxController {
   Future<void> setInitialInformation() async {
     final service = lcuService;
     if (service == null) return disconnect();
-    while (true) {
+    dynamic sessionStatus;
+    while (sessionStatus == null) {
       try {
-        await service.getSessionStatus();
-        break;
+        sessionStatus = await service.getSessionStatus();
       } on DioError catch (e) {
         if (e.message.contains('SocketException') || e.response?.statusCode != 404) return disconnect();
         await Future.delayed(const Duration(seconds: 2));
@@ -96,7 +96,7 @@ class AppController extends GetxController {
       switch (response.event) {
         case wsLoginSession:
           if (!response.data.eventType.toLowerCase().contains('delete')) return;
-          return await disconnect();
+          return disconnect();
 
         case wsReadyCheck:
           if (queueStatus == false) return;
@@ -107,7 +107,6 @@ class AppController extends GetxController {
           for (var i = 0; i < 4; i++) {
             Future.delayed(const Duration(milliseconds: 250)).then((_) => service.acceptReadyCheck());
           }
-          return;
       }
     });
   }

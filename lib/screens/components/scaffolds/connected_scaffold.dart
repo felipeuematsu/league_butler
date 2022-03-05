@@ -16,11 +16,6 @@ class ConnectedScaffold extends GetView<AppController> {
       body: Stack(
         fit: StackFit.loose,
         children: [
-          Positioned(
-            top: 64,
-            left: 64,
-            child: body ?? Container(),
-          ),
           Positioned.fill(
             child: Container(
               color: Colors.transparent,
@@ -43,6 +38,11 @@ class ConnectedScaffold extends GetView<AppController> {
                 ],
               ),
             ),
+          ),
+          Positioned(
+            top: 64,
+            left: 64,
+            child: body ?? Container(),
           ),
         ],
       ),

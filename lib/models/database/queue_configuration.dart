@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:league_butler/main/features/feature_type.dart';
 
 part 'queue_configuration.g.dart';
 
@@ -7,11 +8,13 @@ class QueueConfiguration {
   @HiveField(0, defaultValue: false)
   var isActivated = false;
   @HiveField(1, defaultValue: [])
-  List<int> deactivatedQueues = [];
-  @HiveField(2, defaultValue: false)
-  var rankedActivated = false;
-  @HiveField(3, defaultValue: false)
-  var coopVsIaActivated = false;
-  @HiveField(4, defaultValue: false)
-  var casualActivated = false;
+  List<FeatureType> activatedQueues = [];
+  @HiveField(2, defaultValue: [])
+  List<FeatureType> activatedRankedFeatures = [];
+  @HiveField(3, defaultValue: [])
+  List<FeatureType> activatedCoopFeatures = [];
+  @HiveField(4, defaultValue: [])
+  List<FeatureType> activatedCasualFeatures = [];
+  @HiveField(5, defaultValue: [])
+  List<FeatureType> activatedOtherFeatures = [];
 }

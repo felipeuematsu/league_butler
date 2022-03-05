@@ -1,4 +1,4 @@
-
+import 'package:league_butler/screens/queue/queue_strings.dart';
 
 enum Queue {
   blindPick,
@@ -14,6 +14,7 @@ enum QueueType {
   casual,
   coopVsAI,
   custom,
+  others,
 }
 
 extension QueueExt on Queue {
@@ -26,6 +27,21 @@ extension QueueExt on Queue {
         return QueueType.custom;
       default:
         return QueueType.casual;
+    }
+  }
+}
+
+extension QueueTypeExt on QueueType {
+  String get tr {
+    switch (this) {
+      case QueueType.ranked:
+        return QueueStrings.ranked.tr;
+      case QueueType.casual:
+        return QueueStrings.casual.tr;
+      case QueueType.custom:
+      case QueueType.coopVsAI:
+      case QueueType.others:
+        return QueueStrings.others.tr;
     }
   }
 }

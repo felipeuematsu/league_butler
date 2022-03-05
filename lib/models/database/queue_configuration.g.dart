@@ -18,21 +18,34 @@ class QueueConfigurationAdapter extends TypeAdapter<QueueConfiguration> {
     };
     return QueueConfiguration()
       ..isActivated = fields[0] == null ? false : fields[0] as bool
-      ..deactivatedQueues =
-          fields[1] == null ? [] : (fields[1] as List).cast<int>()
-      ..rankedActivated = fields[2] == null ? false : fields[2] as bool;
+      ..activatedQueues =
+          fields[1] == null ? [] : (fields[1] as List).cast<FeatureType>()
+      ..activatedRankedFeatures =
+          fields[2] == null ? [] : (fields[2] as List).cast<FeatureType>()
+      ..activatedCoopFeatures =
+          fields[3] == null ? [] : (fields[3] as List).cast<FeatureType>()
+      ..activatedCasualFeatures =
+          fields[4] == null ? [] : (fields[4] as List).cast<FeatureType>()
+      ..activatedOtherFeatures =
+          fields[5] == null ? [] : (fields[5] as List).cast<FeatureType>();
   }
 
   @override
   void write(BinaryWriter writer, QueueConfiguration obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.isActivated)
       ..writeByte(1)
-      ..write(obj.deactivatedQueues)
+      ..write(obj.activatedQueues)
       ..writeByte(2)
-      ..write(obj.rankedActivated);
+      ..write(obj.activatedRankedFeatures)
+      ..writeByte(3)
+      ..write(obj.activatedCoopFeatures)
+      ..writeByte(4)
+      ..write(obj.activatedCasualFeatures)
+      ..writeByte(5)
+      ..write(obj.activatedOtherFeatures);
   }
 
   @override
